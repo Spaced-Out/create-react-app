@@ -38,6 +38,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
+const minifyClassNames = require('./css-loader-minify-classnames');
 
 const appPackageJson = require(paths.appPackageJson);
 
@@ -129,10 +130,13 @@ module.exports = function (webpackEnv) {
           // https://github.com/facebook/create-react-app/issues/2677
           ident: 'postcss',
           plugins: () => [
-            require('postcss-flexbugs-fixes'),
+            require('@spaced-out/postcss-flexbugs-strict'),
             require('postcss-preset-env')({
               autoprefixer: {
                 flexbox: 'no-2009',
+              },
+              features: {
+                'nesting-rules': true,
               },
               stage: 3,
             }),
@@ -530,7 +534,9 @@ module.exports = function (webpackEnv) {
                   ? shouldUseSourceMap
                   : isEnvDevelopment,
                 modules: {
-                  getLocalIdent: getCSSModuleLocalIdent,
+                  getLocalIdent: isEnvProduction
+                    ? minifyClassNames()
+                    : getCSSModuleLocalIdent,
                 },
               }),
             },
