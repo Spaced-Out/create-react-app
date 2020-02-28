@@ -38,6 +38,8 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
+const minifyClassNames = require('./css-loader-minify-classnames');
+
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
@@ -143,6 +145,7 @@ module.exports = function (webpackEnv) {
             config: false,
             plugins: !useTailwind
               ? [
+                  require('@spaced-out/postcss-flexbugs-strict'),
                   'postcss-flexbugs-fixes',
                   [
                     'postcss-preset-env',
@@ -256,6 +259,8 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      // require stable hashes between builds if code is unchanged
+      realContentHash: true,
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
@@ -538,7 +543,7 @@ module.exports = function (webpackEnv) {
                   : isEnvDevelopment,
                 modules: {
                   mode: 'local',
-                  getLocalIdent: getCSSModuleLocalIdent,
+                  getLocalIdent: isEnvProduction ? minifyClassNames() : getCSSModuleLocalIdent,
                 },
               }),
             },
