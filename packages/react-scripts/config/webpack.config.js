@@ -116,6 +116,9 @@ module.exports = function(webpackEnv) {
               autoprefixer: {
                 flexbox: 'no-2009',
               },
+              features: {
+                'nesting-rules': true,
+              },
               stage: 3,
             }),
             // Adds PostCSS Normalize as the reset css with default options,
