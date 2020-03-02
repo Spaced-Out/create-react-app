@@ -102,7 +102,7 @@ module.exports = function(webpackEnv) {
           // https://github.com/facebook/create-react-app/issues/2677
           ident: 'postcss',
           plugins: () => [
-            require('postcss-flexbugs-fixes'),
+            require('@spaced-out/postcss-flexbugs-strict'),
             require('postcss-preset-env')({
               autoprefixer: {
                 flexbox: 'no-2009',
