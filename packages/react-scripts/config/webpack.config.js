@@ -37,6 +37,7 @@ const eslint = require('eslint');
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
+const minifyClassNames = require('./css-loader-minify-classnames');
 
 const appPackageJson = require(paths.appPackageJson);
 
@@ -514,7 +515,9 @@ module.exports = function(webpackEnv) {
                 importLoaders: 1,
                 sourceMap: isEnvProduction && shouldUseSourceMap,
                 modules: {
-                  getLocalIdent: getCSSModuleLocalIdent,
+                  getLocalIdent: isEnvProduction
+                    ? minifyClassNames()
+                    : getCSSModuleLocalIdent,
                 },
               }),
             },
