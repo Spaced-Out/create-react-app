@@ -143,6 +143,7 @@ module.exports = function (webpackEnv) {
             config: false,
             plugins: !useTailwind
               ? [
+                  require('@spaced-out/postcss-flexbugs-strict'),
                   'postcss-flexbugs-fixes',
                   [
                     'postcss-preset-env',
@@ -150,6 +151,9 @@ module.exports = function (webpackEnv) {
                       autoprefixer: {
                         flexbox: 'no-2009',
                       },
+                      features: {
+                        'nesting-rules': true,
+                      }
                       stage: 3,
                     },
                   ],
@@ -256,6 +260,8 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      // require stable hashes between builds if code is unchanged
+      realContentHash: true,
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
